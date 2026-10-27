@@ -1,0 +1,25 @@
+{
+  "distribution": "https://github.com/google/fonts",
+  "license": "SIL Open Font License 1.1",
+  "installation": "Application-private files; no system font installation. Unmodified official static TTFs.",
+  "fonts": [
+    {
+      "file": "Montserrat-ExtraBold.ttf",
+      "version": "7.200",
+      "weight": 800,
+      "source": "https://raw.githubusercontent.com/google/fonts/160c7fe82ecb74b108d886ed8d27762f6e346163/ofl/montserrat/Montserrat-ExtraBold.ttf",
+      "licenseSource": "https://raw.githubusercontent.com/google/fonts/160c7fe82ecb74b108d886ed8d27762f6e346163/ofl/montserrat/OFL.txt",
+      "bytes": 262108,
+      "sha256": "257af9a05de6371e1f7b345d02a93af5c2e0ab9b9224418a45189b8cc86049cd"
+    },
+    {
+      "file": "Oswald-Bold.ttf",
+      "version": "4.100",
+      "weight": 700,
+      "source": "https://raw.githubusercontent.com/google/fonts/23a95a792463c0670ef0f6d8cb0ba5fc4e7fd7ad/ofl/oswald/Oswald-Bold.ttf",
+      "licenseSource": "https://raw.githubusercontent.com/google/fonts/23a95a792463c0670ef0f6d8cb0ba5fc4e7fd7ad/ofl/oswald/OFL.txt",
+      "bytes": 94272,
+      "sha256": "0cde70ba3b3398ab0bc19be74c7517442ef711846d33f286d7932fef9784e2d8"
+    }
+  ]
+}

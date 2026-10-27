@@ -1,0 +1,14 @@
+# Copier dans config.toml et remplacer les chemins par ceux de la machine.
+# Ces chemins concernent l'environnement de développement WSL actuel.
+[mcp_servers.rea]
+command = "/absolute/path/Jerry/node_modules/node/bin/node"
+args = ["/absolute/path/rea/scripts/rea.mjs", "mcp"]
+cwd = "/absolute/path/Jerry"
+enabled = true
+startup_timeout_sec = 30
+tool_timeout_sec = 450
+
+[mcp_servers.rea.env]
+REA_MCP_INPUT_SCHEMA_PROFILE = "compact"
+REA_MCP_OUTPUT_SCHEMA_PROFILE = "compact"
+REA_MCP_TOOL_FAMILIES = "native,artifact,session,application"

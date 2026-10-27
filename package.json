@@ -1,0 +1,20 @@
+{
+  "name": "jerry",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "npm@11.16.0",
+  "description": "Espace de travail pour analyser MOUZZ avec REA et préparer une application Windows.",
+  "scripts": {
+    "start": "node scripts/windows.mjs run",
+    "build:windows": "node scripts/windows.mjs build",
+    "test": "node scripts/windows.mjs test",
+    "rea": "node ../rea/scripts/rea.mjs",
+    "rea:doctor": "node ../rea/scripts/rea.mjs doctor --json",
+    "rea:mcp": "node ../rea/scripts/rea.mjs mcp",
+    "rea:build": "npm --prefix ../rea run build:cached"
+  },
+  "devDependencies": {
+    "node": "24.22.1",
+    "npm": "11.16.0"
+  }
+}

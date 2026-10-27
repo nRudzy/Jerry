@@ -1,0 +1,38 @@
+# Dépendances et sorties de compilation
+node_modules/
+dist/
+build/
+coverage/
+**/bin/
+**/obj/
+.vs/
+*.user
+.tools/
+.superpowers/
+TestResults/
+.cache/
+*.log
+
+# Connexion REA propre à cette machine et copie locale des instructions
+.codex/config.toml
+.codex/*.backup*
+.agents/skills/reverse-engineer-anything/
+
+# Applications originales et preuves brutes conservées localement
+targets/*
+!targets/README.md
+evidence/raw/*
+!evidence/raw/README.md
+
+# Configuration privée
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+Desktop.ini
