@@ -1,0 +1,2 @@
+# Preserve the exact upstream license bytes and their original formatting.
+src/Jerry.App/Assets/Fonts/*-OFL.txt -text -whitespace
