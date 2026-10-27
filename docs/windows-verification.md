@@ -1,5 +1,19 @@
 # Vérification Windows
 
+## Icône et préparation GitHub du 28 octobre 2026
+
+- Icône originale fournie en SVG, PNG 1 024 × 1 024 et ICO à dix résolutions.
+- Le même ICO est intégré à l’exécutable et chargé comme ressource WPF pour la
+  fenêtre et la zone de notification.
+- Nouvelle publication Release autonome réussie et **52 tests Core réussis**.
+- Nouvelle exécution de `minimal-ui` avec la ressource intégrée : **2 156
+  contrôles réussis**, sans échec. Les captures du README proviennent de cette
+  exécution ; seules les fenêtres de test propres à Jerry y figurent.
+- Les liens locaux du README et les dix images de l’ICO ont été vérifiés.
+- Preuves locales : `evidence/raw/windows-branding-ui/`. Les limites de capture,
+  de session verrouillée et de configurations matérielles ci-dessous restent
+  applicables.
+
 ## Refonte minimaliste du 28 octobre 2026
 
 - Publication Release autonome réussie ; **52 tests Core réussis**, zéro échec.

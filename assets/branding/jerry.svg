@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 256 256" fill="none">
+  <title>Jerry</title>
+  <desc>A white pointer inside a blue focus ring on a charcoal rounded square.</desc>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="#202024"/>
+  <rect x="8.75" y="8.75" width="238.5" height="238.5" rx="55.25" stroke="#3B3B42" stroke-width="1.5"/>
+  <circle cx="128" cy="128" r="76" stroke="#3B82F6" stroke-width="14"/>
+  <path d="M91 65L91 165L115 144L137 185L155 175L133 136L171 135L91 65Z"
+        fill="#F7F9FF" stroke="#202024" stroke-width="8" stroke-linejoin="round" paint-order="stroke fill"/>
+</svg>

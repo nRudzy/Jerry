@@ -43,7 +43,9 @@ public sealed partial class MainWindow : Window
         var titlebar = new Grid { Height = 38, Background = Theme.Brush("#282828") };
         titlebar.ColumnDefinitions.Add(new ColumnDefinition()); titlebar.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         var brand = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(16, 0, 0, 0), VerticalAlignment = VerticalAlignment.Center };
-        brand.Children.Add(Icons.Create("cursor", 16, Theme.Accent));
+        var appIcon = new Image { Width = 18, Height = 18 };
+        appIcon.SetBinding(Image.SourceProperty, new System.Windows.Data.Binding(nameof(Icon)) { Source = this });
+        brand.Children.Add(appIcon);
         brand.Children.Add(new TextBlock { Text = "Jerry", FontSize = 13, FontWeight = FontWeights.SemiBold, Margin = new Thickness(9, 0, 0, 0) });
         titlebar.Children.Add(brand);
         var captionButtons = new StackPanel { Orientation = Orientation.Horizontal };

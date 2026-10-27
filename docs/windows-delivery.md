@@ -24,7 +24,12 @@ L’archive et les exécutables restent exclus de Git. Les empreintes et le
 résultat du lancement sont conservés dans `evidence/raw/windows-delivery.json`
 et `windows-launch.json` pour la première livraison ; `windows-minimal-delivery.json`
 pour la refonte. La nouvelle copie n’est pas lancée pendant que l’ancienne reste
-ouverte, conformément au choix de Gabriel. Les sources restent dans le dépôt local, sans distant.
+ouverte, conformément au choix de Gabriel.
+
+Les sources sont conservées dans le dépôt privé
+[nRudzy/Jerry](https://github.com/nRudzy/Jerry), sur la branche `main`. Les sorties
+de compilation restent locales. Le README fournit les commandes pour construire
+la version autonome depuis un clone propre.
 
 ## Premier usage
 
