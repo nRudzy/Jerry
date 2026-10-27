@@ -27,3 +27,23 @@ waits for the shared recognition engine.
 The review is not a certification of macOS parity. Physical input delivery,
 mixed-display configurations, visible cursor hiding and long recordings remain
 explicit verification limits in windows-verification.md.
+
+
+## Minimal UI review — 28 October 2026
+
+An independent source review found three interaction regressions, all fixed and
+re-read before delivery:
+
+- Reactive start/stop and draw/finish labels now follow controller state without
+  rebuilding focused page controls. Accessible button names follow the label.
+- Closing the cached tray flyout hides it; subsequent opens reuse a valid WPF
+  window. Actual controller shutdown still destroys it and removes subscribers.
+- Physical pointer bounds dismiss the flyout even when drawing suppresses the
+  external mouse event, or the master switch is disabled. Deactivation and Escape
+  also hide it.
+
+Fresh verification: 52 Release Core tests, 2,156 native UI/component checks and
+the custom-caption close lifecycle passed. The final full encoded fixture run
+reached 93 checks then failed its included-color witness because the Windows
+session was locked. The report does not claim that run passed; see
+windows-verification.md for the evidence and remaining limits.

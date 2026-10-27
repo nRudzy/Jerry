@@ -1,5 +1,39 @@
 # Vérification Windows
 
+## Refonte minimaliste du 28 octobre 2026
+
+- Publication Release autonome réussie ; **52 tests Core réussis**, zéro échec.
+- Mode Windows `minimal-ui` : **2 156 contrôles réussis**, 55 captures de nos
+  composants, quinze rubriques à 940 × 740 et 780 × 560 unités WPF.
+- Interrupteurs à droite, palettes et menus sombres ; menu rapide gardé ouvert
+  pendant les bascules, état modifié par le contrôleur reflété immédiatement.
+- Régressions contrôlées : libellés dessin/capture mis à jour sur place, vraie
+  transition d’enregistrement et fichier MP4 finalisé, fermeture/réouverture du
+  menu, clic extérieur via le chemin d’entrée propre au contrôleur pendant le
+  dessin et quand le maître est coupé.
+- Barre de dessin 548 × 44, huit outils sur une ligne, sélection/couleur/épaisseur
+  synchronisées ; panneau de capture 210 × 46. Les affinités natives des trois
+  panneaux flottants valent `WDA_EXCLUDEFROMCAPTURE` (17).
+- Fermeture sans réduction au plateau : mode `close-no-tray`, deux contrôles
+  réussis, arrêt effectif du contrôleur et de ses fenêtres.
+- Reprise du mode `components` : 93 contrôles réussis avant l’échec du témoin
+  vidéo. Le fichier décodé montre l’écran de verrouillage Windows, pas la scène
+  de test. Les pixels témoins ne peuvent donc pas être validés. Ce dernier
+  essai de composition vidéo **n’a pas réussi** et doit être repris sur une
+  session déverrouillée ; les essais encodés du 27 octobre restent historiques.
+- L’outil Computer Use est indisponible dans ce contexte WSL
+  (`sandboxCwd is not a local file URI`). Les essais construisent et commandent
+  nos propres composants WPF, sans injection de clavier/souris ni UI Automation.
+  Ils ne prouvent pas les interactions physiques ni les scénarios DPI mixtes.
+- L’ancienne instance reste ouverte à la demande de Gabriel. La nouvelle copie
+  se trouve dans `%LOCALAPPDATA%\Jerry\app-minimal`, prête après sa fermeture.
+
+Preuves brutes hors Git : `windows-minimal-ui-final/`, `windows-minimal-components/`,
+`windows-minimal-close-no-tray/`, `windows-minimal-summary.json` et
+`windows-minimal-delivery.json`, sous `evidence/raw/`.
+
+## Résultats de la version initiale du 27 octobre
+
 Essai complémentaire de fermeture : un éditeur occupé a chargé Whisper puis
 annoncé sa transcription ; Quitter a fermé l’éditeur, annulé son travail et
 libéré trois processus média en 935 ms. La progression était encore à 0,2 :

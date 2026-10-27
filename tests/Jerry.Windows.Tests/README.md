@@ -12,7 +12,9 @@ dotnet run --project tests/Jerry.Windows.Tests/Jerry.Windows.Tests.csproj -- <do
 
 | Mode | Vérification |
 | --- | --- |
-| `components` (par défaut) | Dix pages réelles, rendus d’effets distincts, clic forcé, affinité HUD, vidéo incluant annotation et excluant contrôle |
+| `components` (par défaut) | Quinze pages réelles, rendus d’effets distincts, clic forcé, affinité HUD, vidéo incluant annotation et excluant contrôle |
+| `minimal-menu` | Sous-ensemble rapide du menu réel, avec images de son état compact initial et de ses outils supplémentaires dépliés |
+| `minimal-ui` | Quinze pages à taille normale et 780×560, absence de débordement horizontal, menu rapide vivant, sélection/couleurs/largeur de la barre compacte et HUD exclu des captures |
 | `render-regressions` | Clic forcé malgré le réglage désactivé ; restauration du focus sur le même premier plan, pixels réels du rendu de notre fenêtre |
 | `close-no-tray` | Fermer la fenêtre avec `MinimizeToTray=false` quitte l’application et ses services |
 | `quit-countdown` | Quitter pendant le décompte attend la transition annulée |
@@ -52,3 +54,26 @@ atteints avant Quit. Un statut « Transcription Whisper » avec une progression
 restée à 0,2 prouve le passage dans cette phase annoncée, mais ne prouve pas une
 progression native d’inférence au-delà de la préparation audio. Aucun texte reconnu
 sur la fixture silencieuse n’est attendu ni simulé.
+
+Le mode `minimal-ui` teste les contrôles WPF réels du nouveau thème charbon/bleu.
+Les interrupteurs utilisent leur propre événement de clic dans notre processus,
+sans entrée de bureau synthétique ; leurs effets sont vérifiés dans les réglages
+publics du contrôleur. La présence des noms accessibles est lue directement dans
+les propriétés WPF, sans automatisation externe. Un test supplémentaire appelle
+le chemin privé existant `PointerPressed` par réflexion, sans envoyer d’entrée au
+système, pour vérifier la fermeture du menu même lorsque le dessin intercepte la
+souris et lorsque l’interrupteur général est éteint. Les instantanés couvrent chaque
+page et son défilement aux deux tailles. La hauteur compacte de 54 est mesurée en
+DIPs et rapprochée des dimensions natives selon le DPI réellement observé. Les
+assertions géométriques complètent, sans la remplacer, l’inspection visuelle.
+
+La passe minimale vérifie aussi les libellés vivants sur les mêmes contrôles,
+sans changer de page : dessin puis arrêt, et démarrage/finalisation d’une véritable
+courte capture. Le menu est fermé via sa propre méthode `Close`, puis rouvert pour
+vérifier la réutilisation sûre de la fenêtre. Le popup réel de la liste de fréquence
+est rendu séparément et sa sélection doit modifier puis restaurer le modèle.
+
+La fixture vidéo exige une session Windows déverrouillée. Une image de verrouillage
+ou l’absence des marqueurs attendus constitue un échec du test de capture ; les
+rendus `RenderTargetBitmap` restent des preuves de composants WPF et ne sont pas
+présentés comme une preuve que ces composants apparaissaient réellement à l’écran.

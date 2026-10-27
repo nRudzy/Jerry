@@ -22,7 +22,8 @@ public sealed class AppSettings
     {
         ["spotlight"] = true, ["ring"] = true, ["trail"] = true, ["click"] = true,
         ["annotation"] = true, ["zoom"] = true, ["loupe"] = true, ["focus"] = true,
-        ["camera"] = true, ["captions"] = true
+        ["camera"] = true, ["captions"] = true, ["sound"] = true,
+        ["locate"] = true, ["keystrokes"] = true
     };
     public SpotlightOptions Spotlight { get; set; } = new();
     public RingOptions Ring { get; set; } = new();

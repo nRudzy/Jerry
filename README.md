@@ -12,7 +12,10 @@ Depuis le projet, Windows ou WSL :
 npm start
 ```
 
-Jerry reste accessible dans la zone de notification. Les raccourcis sont vides au départ : les choisir dans **Raccourcis**. Le bouton maître coupe les effets sans arrêter une capture.
+Jerry reste accessible dans la zone de notification. Un clic ouvre le menu rapide ;
+**Autres outils** déploie les commandes supplémentaires et **Menu rapide** règle
+leur visibilité. L’interface utilise quinze rubriques compactes et des interrupteurs
+bleus sur fond anthracite. Les raccourcis sont vides au départ : les choisir dans **Raccourcis**. Le bouton maître coupe les effets sans arrêter une capture.
 
 ## Fonctions
 

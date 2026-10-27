@@ -54,6 +54,7 @@ public sealed class SettingsStore(string path)
         s.Zoom ??= new(); s.Focus ??= new(); s.Recording ??= new(); s.Camera ??= new(); s.Captions ??= new();
         s.Hotkeys ??= new();
         s.TrayItems ??= new AppSettings().TrayItems;
+        foreach (var item in new AppSettings().TrayItems) s.TrayItems.TryAdd(item.Key, item.Value);
         s.UpdateRate = Math.Clamp(s.UpdateRate, 15, 120);
         foreach (var key in new AppSettings().Hotkeys.Keys) s.Hotkeys.TryAdd(key, "");
         s.Spotlight.Radius = Clamp(s.Spotlight.Radius, 10, 1000, 145);

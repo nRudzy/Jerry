@@ -70,7 +70,7 @@ internal static partial class Program
             Check(main.IsVisible, "MainWindow visible");
             await PumpAsync();
             var navigation = Descendants(main).OfType<ListBox>().Single();
-            Check(navigation.Items.Count == 10, "All ten settings pages exist");
+            Check(navigation.Items.Count == 15, "All fifteen settings pages exist");
             for (var i = 0; i < navigation.Items.Count; i++)
             {
                 navigation.SelectedIndex = i;
@@ -88,7 +88,7 @@ internal static partial class Program
                     part++;
                     if (top >= scroll.ScrollableHeight || part > 14) break;
                 }
-                results.Add(new { page = i, title = ((ListBoxItem)navigation.Items[i]).Content?.ToString(), parts = part });
+                results.Add(new { page = i, title = OwnControlLabel((ListBoxItem)navigation.Items[i]), parts = part });
             }
             var hud = new RecordingControlWindow(controller);
             hud.Show(); await PumpAsync();

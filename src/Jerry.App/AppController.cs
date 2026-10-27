@@ -39,9 +39,11 @@ public sealed class AppController : IDisposable
     private readonly DispatcherTimer clock, saveTimer, focusTimer, holdTimer;
     private readonly SemaphoreSlim recordTransition = new(1, 1);
     private readonly Forms.NotifyIcon tray;
+    private readonly System.Drawing.Icon trayIcon = AppIcon.Create();
     private readonly MainWindow main;
     private RecordingControlWindow? recordingHud;
     private AnnotationToolbar? toolbar;
+    private QuickMenuWindow? quickMenu;
     private CameraOverlayWindow? cameraWindow;
     private CancellationTokenSource? recordCancellation;
     private bool disposed, drawingStroke, textInput, heldSpotlight, originalSpotlight;
@@ -61,8 +63,9 @@ public sealed class AppController : IDisposable
     public bool IsBusy => busyCount > 0;
     public bool IsRecordingTransition => recordTransition.CurrentCount == 0;
     public bool DrawingMode => scene.Drawing;
+    public bool IsZoomActive => zoomActive;
     public bool IsShuttingDown { get; private set; }
-    public string Status { get; private set; } = "Prêt. Les effets suivent votre souris.";
+    public string Status { get; private set; } = "Prêt";
     public string? LastRecording { get; private set; }
     public event Action? StateChanged;
     public event Action<string>? StatusChanged;
@@ -121,8 +124,10 @@ public sealed class AppController : IDisposable
         captions.LiveText += text => Dispatch(() => { scene.SetCaption(text); Refresh(); });
         captions.LiveError += ex => Dispatch(() => { Settings.Captions.LiveEnabled = false; SetStatus("Sous-titres live : " + ex.Message); SettingsChanged(); });
         main = new(this);
-        tray = new Forms.NotifyIcon { Icon = System.Drawing.SystemIcons.Application, Text = "Jerry — effets de curseur", Visible = true };
+        tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "Jerry — effets de curseur", Visible = true };
+        main.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(trayIcon.Handle, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
         tray.DoubleClick += (_, _) => Dispatch(ShowSettings);
+        tray.MouseClick += (_, e) => { if (e.Button is Forms.MouseButtons.Left or Forms.MouseButtons.Right) Dispatch(ShowQuickMenu); };
         tray.BalloonTipClicked += (_, _) => Dispatch(OpenOutputFolder);
         RebuildTray();
         RecreateOverlays();
@@ -137,7 +142,15 @@ public sealed class AppController : IDisposable
     }
 
     public void ShowSettings()
-    { if (!main.IsVisible) main.Show(); if (main.WindowState == WindowState.Minimized) main.WindowState = WindowState.Normal; main.Activate(); }
+    { quickMenu?.Hide(); if (!main.IsVisible) main.Show(); if (main.WindowState == WindowState.Minimized) main.WindowState = WindowState.Normal; main.Activate(); }
+
+    public void ShowQuickMenu()
+    {
+        if (disposed || IsShuttingDown) return;
+        quickMenu ??= new QuickMenuWindow(this);
+        if (quickMenu.IsVisible) { quickMenu.Hide(); return; }
+        quickMenu.ShowAtCursor();
+    }
 
     public void SettingsChanged()
     {
@@ -219,6 +232,7 @@ public sealed class AppController : IDisposable
     private void PointerPressed(PointerInput p)
     {
         if (IsShuttingDown || disposed) return;
+        quickMenu?.DismissIfOutside(p.X, p.Y);
         scene.Move(p.X, p.Y); tap.Invalidate();
         if (!Settings.Enabled) return;
         if (Settings.Click.Enabled && Settings.Click.Automatic) scene.AddClick(p.Button);
@@ -479,32 +493,7 @@ public sealed class AppController : IDisposable
     private void RebuildTray()
     {
         if (tray == null) return;
-        var menu = new Forms.ContextMenuStrip();
-        void Item(string label, Action action, bool? check = null)
-        {
-            var item = new Forms.ToolStripMenuItem(label);
-            if (check.HasValue) item.Checked = check.Value;
-            item.Click += (_, _) => Dispatch(action); menu.Items.Add(item);
-        }
-        Item("Ouvrir Jerry", ShowSettings);
-        Item("Effets activés", () => Toggle("master"), Settings.Enabled);
-        menu.Items.Add(new Forms.ToolStripSeparator());
-        var effects = new (string Key, string Label, bool Enabled)[]
-        {
-            ("spotlight","Spotlight",Settings.Spotlight.Enabled),("ring","Anneau",Settings.Ring.Enabled),
-            ("trail","Traînée",Settings.Trail.Enabled),("click","Effets de clic",Settings.Click.Enabled),
-            ("annotation","Dessiner à l’écran",scene.Drawing),("zoom","Zoom live",zoomActive),
-            ("loupe","Loupe",Settings.Zoom.LoupeEnabled),("focus","Focus fenêtre",Settings.Focus.Enabled),
-            ("camera","Webcam",Settings.Camera.Enabled),("captions","Sous-titres live",Settings.Captions.LiveEnabled)
-        };
-        foreach (var effect in effects)
-            if (!Settings.TrayItems.TryGetValue(effect.Key, out var visible) || visible) Item(effect.Label, () => Toggle(effect.Key), effect.Enabled);
-        menu.Items.Add(new Forms.ToolStripSeparator());
-        Item(IsRecording ? "Arrêter l’enregistrement" : "Enregistrer l’écran", () => _ = ToggleRecordingAsync());
-        if (LastRecording != null) Item("Sous-titrer la dernière prise", () => ShowCaptionEditor(LastRecording));
-        Item("Ouvrir les captures", OpenOutputFolder);
-        Item("Quitter Jerry", Quit);
-        var previous = tray.ContextMenuStrip; tray.ContextMenuStrip = menu; previous?.Dispose();
+        tray.Text = IsRecording ? "Jerry — enregistrement en cours" : Settings.Enabled ? "Jerry — effets activés" : "Jerry — effets désactivés";
     }
     private void DisplayChanged(object? sender, EventArgs args) => Dispatch(async () =>
     { recordCancellation?.Cancel(); if (recording.IsRecording) await ToggleRecordingAsync(); RecreateOverlays(); cameraWindow?.MoveToMonitor(CursorMonitor()); Refresh(); });
@@ -575,8 +564,8 @@ public sealed class AppController : IDisposable
         Microsoft.Win32.SystemEvents.SessionSwitch -= SessionSwitch;
         clock.Stop(); saveTimer.Stop(); focusTimer.Stop(); holdTimer.Stop();
         input.Dispose(); hotkeys.Dispose(); magnification.Dispose(); sound.Dispose();
-        TrySave(); tray.Visible = false; tray.Dispose();
-        recordingHud?.Close(); toolbar?.Close(); cameraWindow?.Close();
+        TrySave(); tray.Visible = false; tray.Dispose(); trayIcon.Dispose();
+        quickMenu?.Close(); recordingHud?.Close(); toolbar?.Close(); cameraWindow?.Close();
         foreach (var window in overlays) window.Close(); main.Close();
     }
 }

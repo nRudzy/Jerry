@@ -49,5 +49,22 @@ public sealed class SettingsTests : IDisposable
         Assert.Equal(30, loaded.Recording.FramesPerSecond);
         Assert.All(loaded.Hotkeys.Values, value => Assert.Equal("", value));
     }
+    [Fact]
+    public void LegacyMenuPreferencesSurviveTheAdditionOfQuickMenuTools()
+    {
+        var path = Path.Combine(directory, "settings.json");
+        File.WriteAllText(path, """{"TrayItems":{"ring":false,"focus":false},"Hotkeys":{"record":"Ctrl+Alt+R"}}""");
+        var store = new SettingsStore(path);
+        var settings = store.Load();
+        Assert.False(settings.TrayItems["ring"]);
+        Assert.False(settings.TrayItems["focus"]);
+        Assert.True(settings.TrayItems["sound"]);
+        Assert.True(settings.TrayItems["locate"]);
+        Assert.True(settings.TrayItems["keystrokes"]);
+        Assert.Equal("Ctrl+Alt+R", settings.Hotkeys["record"]);
+        Assert.Equal("", settings.Hotkeys["master"]);
+        store.Save(settings);
+        Assert.False(store.Load().TrayItems["ring"]);
+    }
     public void Dispose() => Directory.Delete(directory, true);
 }
