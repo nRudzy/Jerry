@@ -12,8 +12,13 @@ $dotnet = Join-Path $env:ProgramFiles 'dotnet\dotnet.exe'
 if (!(Test-Path $dotnet)) { throw 'Installez le SDK .NET 10 pour construire Jerry.' }
 function Invoke-JerryDotnet([string[]]$BuildArguments) {
     $commandLine = ($BuildArguments | ForEach-Object { '"' + $_.Replace('"', '\"') + '"' }) -join ' '
-    $buildProcess = Start-Process -FilePath $dotnet -ArgumentList $commandLine -Wait -NoNewWindow -PassThru
-    if ($buildProcess.ExitCode -ne 0) { throw "La commande .NET a échoué (code $($buildProcess.ExitCode))." }
+    $buildProcess = Start-Process -FilePath $dotnet -ArgumentList $commandLine -NoNewWindow -PassThru
+    try {
+        # Start-Process -Wait also waits for persistent compiler-server children.
+        # The SDK command's own exit code is the build completion boundary.
+        $buildProcess.WaitForExit()
+        if ($buildProcess.ExitCode -ne 0) { throw "La commande .NET a échoué (code $($buildProcess.ExitCode))." }
+    } finally { $buildProcess.Dispose() }
 }
 Push-Location $projectRoot
 try {

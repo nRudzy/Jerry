@@ -17,6 +17,11 @@ conservées. Le [plan](superpowers/plans/2026-10-28-windows-installer.md) et la
 - L'auxiliaire a été publié en exécutable autonome unique ; sa lecture du choix de
   démarrage fonctionne sans charger les services média.
 
+Les 2 156 contrôles WPF `minimal-ui` passent également après intégration, sans
+refonte de l’interface. Le raccourci `npm test` est bloqué par la politique
+PowerShell locale ; les suites ci-dessus ont été exécutées directement avec
+`dotnet`. Aucun contournement de cette politique n’a été ajouté.
+
 Les preuves locales détaillées sont dans `evidence/raw/` (ignoré par Git).
 
 ## Cycle d'installation sur runner jetable

@@ -58,7 +58,10 @@ de Visual Studio. Il publie aussi `Jerry.Maintenance.exe`, un auxiliaire .NET
 autonome utilisé avant la copie et avant la désinstallation. Il produit
 l’installateur, le ZIP et les sommes dans `dist/`. Le paramètre
 `-VcRedistDirectory` permet de préciser le dossier officiel des DLL CRT.
-Les licences et notices sont copiées avec les applications.
+Les licences et notices sont copiées avec les applications. Si la politique locale
+bloque les scripts PowerShell de développement, utilisez directement `dotnet test`
+et `dotnet publish`, ou les livraisons construites en CI ; ne changez pas cette
+politique. Le wrapper npm respecte également ce réglage Windows.
 
 Les tests unitaires Windows ne modifient pas les inscriptions Jerry. Le script
 `test-installer.ps1`, qui installe et désinstalle réellement, exige un runner

@@ -274,11 +274,18 @@ try {
         Invoke-JerrySetup -ExpectRefusal
         Assert-JerryPayload
         Assert-Jerry ((Get-JerryStartup) -ceq $jerryStartup -and (Get-FileHash (Join-Path $jerryData 'settings.json')).Hash -ceq $jerrySettingsHash) 'Refus sans modification du demarrage ni des preferences'
+        $jerryRefusedUninstall = Start-Process -FilePath (Join-Path $jerryApp 'unins000.exe') -ArgumentList ('/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG="' + (Join-Path $OutputDirectory 'uninstall-refused.log') + '"') -PassThru
+        Assert-Jerry ($jerryRefusedUninstall.WaitForExit(30000) -and $jerryRefusedUninstall.ExitCode -ne 0) 'Desinstallation refusee si la preparation ne libere pas l ancienne instance'
+        Assert-Jerry (Test-Path -LiteralPath $jerryUninstallKey) 'Refus de desinstallation avant suppression des inscriptions'
+        Assert-JerryPayload
+        Assert-Jerry ((Get-JerryStartup) -ceq $jerryStartup -and (Get-FileHash (Join-Path $jerryData 'settings.json')).Hash -ceq $jerrySettingsHash) 'Refus de desinstallation sans changement des preferences ni du demarrage'
     } finally { if ($jerryCreated) { $jerryLegacy.ReleaseMutex() }; $jerryLegacy.Dispose() }
 
     $jerryOwnedApp = Start-JerryIdle
     # Let the real application's IPC server finish initialization.
     Start-Sleep -Seconds 2
+    Invoke-JerryHelper '--configure-startup=disable' 10
+    Assert-Jerry (-not $jerryOwnedApp.HasExited) 'Configuration de demarrage refusee sans fermer une instance active'
     $jerryStartup = Get-JerryStartup
     $jerrySettingsHash = (Get-FileHash (Join-Path $jerryData 'settings.json')).Hash
     $jerryCancel = Start-Process -FilePath (Join-Path $jerryApp 'unins000.exe') -ArgumentList ('/NORESTART /LOG="' + (Join-Path $OutputDirectory 'uninstall-cancel.log') + '"') -PassThru
