@@ -111,5 +111,5 @@ jobs:
             $actual = (Get-FileHash (Join-Path dist $Matches[2]) -Algorithm SHA256).Hash.ToLowerInvariant()
             if ($actual -cne $Matches[1]) { throw 'Downloaded artifact checksum mismatch.' }
           }
-          gh release create $env:GITHUB_REF_NAME --verify-tag --title 'Jerry 0.2.0' --generate-notes dist/Jerry-Setup-0.2.0.exe dist/Jerry-Windows-x64-0.2.0.zip dist/SHA256SUMS.txt
+          gh release create $env:GITHUB_REF_NAME --verify-tag --title 'Jerry 0.2.0' --notes-file docs/releases/0.2.0.md dist/Jerry-Setup-0.2.0.exe dist/Jerry-Windows-x64-0.2.0.zip dist/SHA256SUMS.txt
           if ($LASTEXITCODE -ne 0) { throw 'GitHub release publication failed.' }

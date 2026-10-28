@@ -26,8 +26,36 @@ Les preuves locales détaillées sont dans `evidence/raw/` (ignoré par Git).
 
 ## Cycle d'installation sur runner jetable
 
-Validation CI en cours de préparation. Ce paragraphe sera remplacé par le lien
-du run et ses résultats avant la livraison.
+Le [run Windows 40686017879](https://github.com/nRudzy/Jerry/actions/runs/40686017879)
+est réussi : deux machines GitHub hébergées distinctes pour les composants et
+le cycle d'installation. L'assistant Inno compile en 61 secondes ; le cycle
+d'installation compte **132 contrôles réussis**.
+
+- Première installation par utilisateur dans un chemin avec espaces et Unicode,
+  Applications installées, App Paths et raccourci Démarrer vérifiés.
+- **539 fichiers** de publication vérifiés par taille et empreinte, puis comparés
+  au ZIP. Runtime .NET, DLL natives, polices et licences sont inclus.
+- Chargement réel de Whisper 1.8.2 et des quatre DLL CRT/OpenMP depuis le dossier
+  Jerry, avec recherche limitée aux dossiers explicites et à Windows.
+- Activations et désactivations du démarrage conservées lors de mises à jour,
+  choix `/TASKS` et `/MERGETASKS`, ajout du raccourci Bureau et désactivation
+  Windows StartupApproved pris en compte.
+- Lancement bloqué pendant la réservation d'instance ; installation et
+  désinstallation refusées si une ancienne instance conserve son mutex, avant
+  suppression ou modification des préférences.
+- Configuration du démarrage refusée pendant une instance active ; annulation
+  réelle de la confirmation du désinstallateur sans fermer l'application ni
+  changer ses préférences ou le registre.
+- Mise à jour et désinstallation confirmée après sortie propre d'une instance
+  inactive ; fichiers, raccourcis et inscriptions supprimés, démarrage désactivé.
+- Réglages connus et inconnus conservés ; empreintes des captures, sessions,
+  modèles et outils factices inchangées après le cycle. Aucun original ni
+  réglage utilisateur local n'est employé sur ces runners.
+
+Le premier essai CI avait révélé une attente du serveur Roslyn après la fin de
+`dotnet publish`. Le script attend maintenant le seul processus de commande et
+vérifie son code de sortie ; la construction complète prend 98 secondes sur le
+run réussi. Aucun serveur de compilation n'est tué par le script.
 
 ## Limites
 
@@ -39,6 +67,10 @@ Une version Jerry antérieure au canal de maintenance exige une fermeture
 manuelle. Une activité protégée entraîne un refus, sans arrêt de capture ni
 remplacement des fichiers. L'installation locale est différée si l'utilisateur
 conserve une session ouverte.
+
+Les chemins UNC/WSL et relatifs sont testés ; le rejet d'un lecteur réseau mappé
+est implémenté par le type du lecteur, mais aucun lecteur réseau réel n'a été
+monté pour ces essais.
 
 Cette livraison ne certifie aucune parité supplémentaire avec MOUZZ. Les limites
 macOS, multi-écrans et DPI documentées dans la validation fonctionnelle restent

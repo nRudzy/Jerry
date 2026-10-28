@@ -33,10 +33,10 @@
 
 **Interfaces:** startup registry key `Software\Microsoft\Windows\CurrentVersion\App Paths\Jerry.exe`; maintenance mutex `Local\Jerry.CursorStudio.Maintenance`. Helper command contract from the spec. AppController.TryQuitForMaintenance() refuses active work and otherwise invokes normal shutdown.
 
-- [ ] Add failing startup target/preference tests and run them against the missing/current behavior.
-- [ ] Implement shared local-path/startup configuration and safe instance IPC, plus the autonomous helper.
-- [ ] Add Windows component regressions proving an active countdown/recording stays active after a refused request.
-- [ ] Verify unit tests and relevant Windows component cases; commit native integration.
+- [x] Add failing startup target/preference tests and run them against the missing/current behavior.
+- [x] Implement shared local-path/startup configuration and safe instance IPC, plus the autonomous helper.
+- [x] Add Windows component regressions proving an active countdown/recording stays active after a refused request.
+- [x] Verify unit tests and relevant Windows component cases; commit native integration.
 
 ### Task 2: Installer, packaging and disposable lifecycle verification
 
@@ -44,16 +44,16 @@
 
 **Interfaces:** consumes published `dist/windows-x64/` and self-contained helper; produces `dist/Jerry-Setup-0.2.0.exe`, `dist/Jerry-Windows-x64-0.2.0.zip`, `dist/SHA256SUMS.txt`.
 
-- [ ] Implement lifecycle test with hosted-runner and clean-profile guards; verify local refusal before any mutation.
-- [ ] Build the installer with current mascot, full payload, local destination and independent Jerry identifiers.
-- [ ] Exercise native install/update/uninstall, task merging, cancellation, refused maintenance, and retained fixture hashes on hosted Windows CI.
-- [ ] Verify full payload and checksums; fix observed failures and commit packaging.
+- [x] Implement lifecycle test with hosted-runner and clean-profile guards; verify local refusal before any mutation.
+- [x] Build the installer with current mascot, full payload, local destination and independent Jerry identifiers.
+- [x] Exercise native install/update/uninstall, task merging, cancellation, refused maintenance, and retained fixture hashes on hosted Windows CI.
+- [x] Verify full payload and checksums; fix observed failures and commit packaging.
 
 ### Task 3: Review, documentation and public release
 
 **Files:** README.md, docs/windows-delivery.md and installation verification report.
 
-- [ ] Run complete Core/Windows unit suite and installer CI; independently review the branch and fix material findings.
+- [x] Run complete Core/Windows unit suite and installer CI; independently review the branch and fix material findings.
 - [ ] Document only actual verification, signature limitation and any deferred local installation.
 - [ ] Integrate into main, publish version tag and verified release artifacts, verify remote hashes and clean only the merged working branch.
 - [ ] Check local session state; install only if no Jerry instance is active. Otherwise leave installer ready and report the deferred local step.
