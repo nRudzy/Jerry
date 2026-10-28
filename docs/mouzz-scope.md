@@ -5,8 +5,9 @@
 ## Demande et contraintes
 
 Recréer pour un usage personnel les fonctions existantes de MOUZZ dans une
-application adaptée et optimisée pour Windows. Le futur dépôt GitHub sera
-privé. Les nouvelles fonctions viennent ensuite. La couverture des éditions
+application adaptée et optimisée pour Windows. Le choix initial était un dépôt
+GitHub privé ; le 28 octobre 2026, l’utilisateur a confirmé vouloir le conserver
+public. Les nouvelles fonctions viennent ensuite. La couverture des éditions
 gratuite et Pro est l'interprétation retenue de la demande de périmètre complet.
 
 MOUZZ est une application **macOS**. L'utilisateur dispose uniquement de

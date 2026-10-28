@@ -2,14 +2,21 @@
 
 ## Exécutable
 
-Version portable autonome x64, issue de la construction Release.
+Version portable autonome x64 avec la mascotte néon, issue de la construction Release.
 
-- Nouvelle copie Windows : `%LOCALAPPDATA%\Jerry\app-minimal\Jerry.exe`.
-- Ancienne copie laissée ouverte : `%LOCALAPPDATA%\Jerry\app\Jerry.exe`.
-  Quitter cette instance avant d’ouvrir la nouvelle, car Jerry utilise une
-  instance unique. Les deux copies partagent le même dossier de réglages.
-- Copie du projet : `dist/windows-x64/Jerry.exe`.
-- Archive : `dist/Jerry-Windows-x64.zip`.
+- Copie Windows : `%LOCALAPPDATA%\Jerry\app-neon\Jerry.exe`.
+- Copie du projet : `dist/neon-windows-x64/Jerry.exe`.
+- Archive : `dist/Jerry-Neon-Windows-x64.zip`.
+
+Pour voir la nouvelle icône, choisir **Quitter Jerry** dans l’icône près de
+l’horloge, puis ouvrir cette nouvelle copie. La session en cours reste ouverte
+pendant la préparation. Jerry n’exécute qu’une seule instance ; les copies
+partagent le même dossier de réglages.
+
+Les livraisons précédentes restent dans `app`, `app-minimal` et
+`dist/windows-x64`. Les commandes de construction standard du README produisent
+la version courante des sources dans `dist/windows-x64`, après fermeture de la
+copie qui y serait encore exécutée.
 
 Décompresser **tout** le dossier de l’archive. Garder les DLL et `Assets/Fonts`
 à côté de l’exécutable. Aucune installation de .NET, Node.js ou REA n’est
@@ -23,10 +30,11 @@ télécharge depuis leur distribution officielle.
 L’archive et les exécutables restent exclus de Git. Les empreintes et le
 résultat du lancement sont conservés dans `evidence/raw/windows-delivery.json`
 et `windows-launch.json` pour la première livraison ; `windows-minimal-delivery.json`
-pour la refonte. La nouvelle copie n’est pas lancée pendant que l’ancienne reste
+pour la refonte ; `windows-neon-delivery.json` pour la mascotte néon. La nouvelle
+copie n’est pas lancée pendant que l’ancienne reste
 ouverte, conformément au choix de Gabriel.
 
-Les sources sont conservées dans le dépôt privé
+Les sources sont disponibles dans le dépôt public
 [nRudzy/Jerry](https://github.com/nRudzy/Jerry), sur la branche `main`. Les sorties
 de compilation restent locales. Le README fournit les commandes pour construire
 la version autonome depuis un clone propre.

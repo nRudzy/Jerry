@@ -20,7 +20,7 @@ public sealed class QuickMenuWindow : Window
     private bool syncing;
     private System.Drawing.Point anchor;
 
-    public QuickMenuWindow(AppController controller)
+    public QuickMenuWindow(AppController controller, ImageSource? applicationIcon = null)
     {
         this.controller = controller;
         Title = "Jerry — Menu rapide"; Width = 282; SizeToContent = SizeToContent.Height;
@@ -31,7 +31,9 @@ public sealed class QuickMenuWindow : Window
         var body = new StackPanel { Margin = new Thickness(5) };
         var master = Switch("master", "Activer Jerry", "cursor", () => controller.Settings.Enabled);
         var header = new StackPanel { Orientation = Orientation.Horizontal };
-        header.Children.Add(Icons.Create("cursor", 18, Theme.Accent));
+        header.Children.Add(applicationIcon != null
+            ? new Image { Source = applicationIcon, Width = 18, Height = 18 }
+            : Icons.Create("cursor", 18, Theme.Accent));
         header.Children.Add(new TextBlock { Text = "Jerry", FontWeight = FontWeights.SemiBold, Margin = new Thickness(9, 0, 0, 0) });
         master.Content = header; master.MinHeight = 38; body.Children.Add(master); Separator(body);
         var s = controller.Settings;

@@ -1,5 +1,39 @@
 # Vérification Windows
 
+## Mascotte néon et lisibilité de la zone de notification — 28 octobre 2026
+
+La nouvelle mascotte ImageGen rend hommage à Jerry de Tom et Jerry : tête de
+souris, grandes oreilles, contours cyan et magenta. Les sources et le prompt
+sont dans `assets/branding/` ; les exports conservent la transparence et retirent
+les marges vides, sans déformer le personnage.
+
+Le test natif `tray-icon` a d’abord échoué sur la version précédente : le
+NotifyIcon recevait un bitmap de 32 × 32 alors que Windows demandait 24 × 24.
+Le premier plan mesuré occupait 22 × 22 dans ce bitmap de 32 pixels. Après
+correction, le NotifyIcon reçoit **24 × 24** et le premier plan mesure
+**24 × 20**. Le masque de mesure retient alpha ≥ 96 et max(R,V,B) ≥ 90 ; il
+mesure la silhouette lumineuse, pas la case Windows elle-même.
+
+- **4 contrôles natifs réussis**, dont la conservation d’une image de fenêtre
+  indépendante de 32 pixels.
+- **52 tests Core réussis**, **2 156 contrôles UI réussis**, puis fermeture sans
+  réduction au plateau : **2 contrôles réussis**.
+- Les dix résolutions ICO et la transparence du PNG ont été vérifiées.
+- Le rendu en 16/20/24/32/48 pixels est montré sur fond clair et sombre dans
+  `docs/assets/icon-sizes.png`.
+- Une revue indépendante n’a trouvé aucun problème matériel dans le chargement,
+  la propriété des icônes et leur libération après fermeture de l’interface.
+- La publication autonome est préparée séparément dans `dist/neon-windows-x64/`
+  et `%LOCALAPPDATA%\Jerry\app-neon`. Une fois l’ancienne instance terminée, la
+  nouvelle version a été lancée en arrière-plan : processus réactif, sans journal
+  d’exception applicative.
+
+Preuves locales : `windows-tray-icon-red/`, `windows-tray-icon-green/`,
+`windows-neon-ui/`, `windows-neon-close/` et `windows-neon-delivery.json`, sous
+`evidence/raw/`. Les changements de DPI pendant l’exécution et les écrans à
+échelles mixtes restent à vérifier. Les limites de capture décrites plus bas
+restent applicables ; aucun nouveau résultat de composition vidéo n’est annoncé.
+
 ## Icône et préparation GitHub du 28 octobre 2026
 
 - Icône originale fournie en SVG, PNG 1 024 × 1 024 et ICO à dix résolutions.

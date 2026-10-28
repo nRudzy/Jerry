@@ -39,7 +39,8 @@ public sealed class AppController : IDisposable
     private readonly DispatcherTimer clock, saveTimer, focusTimer, holdTimer;
     private readonly SemaphoreSlim recordTransition = new(1, 1);
     private readonly Forms.NotifyIcon tray;
-    private readonly System.Drawing.Icon trayIcon = AppIcon.Create();
+    private readonly System.Drawing.Icon applicationIcon = AppIcon.Create();
+    private readonly System.Drawing.Icon trayIcon = AppIcon.CreateTray();
     private readonly MainWindow main;
     private RecordingControlWindow? recordingHud;
     private AnnotationToolbar? toolbar;
@@ -125,7 +126,7 @@ public sealed class AppController : IDisposable
         captions.LiveError += ex => Dispatch(() => { Settings.Captions.LiveEnabled = false; SetStatus("Sous-titres live : " + ex.Message); SettingsChanged(); });
         main = new(this);
         tray = new Forms.NotifyIcon { Icon = trayIcon, Text = "Jerry — effets de curseur", Visible = true };
-        main.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(trayIcon.Handle, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+        main.Icon = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(applicationIcon.Handle, Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
         tray.DoubleClick += (_, _) => Dispatch(ShowSettings);
         tray.MouseClick += (_, e) => { if (e.Button is Forms.MouseButtons.Left or Forms.MouseButtons.Right) Dispatch(ShowQuickMenu); };
         tray.BalloonTipClicked += (_, _) => Dispatch(OpenOutputFolder);
@@ -147,7 +148,7 @@ public sealed class AppController : IDisposable
     public void ShowQuickMenu()
     {
         if (disposed || IsShuttingDown) return;
-        quickMenu ??= new QuickMenuWindow(this);
+        quickMenu ??= new QuickMenuWindow(this, main.Icon);
         if (quickMenu.IsVisible) { quickMenu.Hide(); return; }
         quickMenu.ShowAtCursor();
     }
@@ -564,8 +565,9 @@ public sealed class AppController : IDisposable
         Microsoft.Win32.SystemEvents.SessionSwitch -= SessionSwitch;
         clock.Stop(); saveTimer.Stop(); focusTimer.Stop(); holdTimer.Stop();
         input.Dispose(); hotkeys.Dispose(); magnification.Dispose(); sound.Dispose();
-        TrySave(); tray.Visible = false; tray.Dispose(); trayIcon.Dispose();
+        TrySave(); tray.Visible = false; tray.Dispose();
         quickMenu?.Close(); recordingHud?.Close(); toolbar?.Close(); cameraWindow?.Close();
         foreach (var window in overlays) window.Close(); main.Close();
+        trayIcon.Dispose(); applicationIcon.Dispose();
     }
 }

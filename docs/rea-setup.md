@@ -62,6 +62,7 @@ dans l'environnement utilisé. L'inventaire des fichiers fonctionne ; la
 décompilation et la vérification du comportement demandent des étapes
 supplémentaires.
 
-Le dépôt Git local est initialisé sur `main`. Aucun dépôt GitHub n'a été créé,
-aucun distant n'a été associé et aucun fichier n'a été envoyé. La préférence
-retenue pour cette étape ultérieure est un dépôt **privé**.
+Lors de la préparation initiale, le dépôt était uniquement local sur `main`,
+avec une préférence pour un futur dépôt privé. Les sources sont désormais
+publiées sur [nRudzy/Jerry](https://github.com/nRudzy/Jerry). Le 28 octobre 2026,
+l’utilisateur a confirmé vouloir conserver ce dépôt **public**.

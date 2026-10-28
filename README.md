@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/branding/jerry.png" alt="Icône de Jerry" width="112" height="112">
+  <img src="assets/branding/jerry.png" alt="Mascotte Jerry aux contours néon" width="112" height="112">
 </p>
 
 <h1 align="center">Jerry</h1>
@@ -109,7 +109,7 @@ supprimer pour libérer de l’espace.
 ## Développement
 
 ```text
-assets/branding/         Icône originale : SVG, PNG et ICO Windows
+assets/branding/         Mascotte néon : source PNG et ICO Windows
 src/Jerry.App/           Application WPF, interface et intégration Windows
 src/Jerry.Core/          Réglages, entrées, géométrie et logique de sous-titres
 tests/Jerry.Core.Tests/  Tests unitaires
@@ -135,14 +135,15 @@ physiques restent à compléter ; voir le [rapport de validation](docs/windows-v
 
 ## Références
 
-Projet personnel privé inspiré du périmètre étudié de [MOUZZ](https://mouzz.dev/).
+Projet personnel publié sur GitHub, inspiré du périmètre étudié de [MOUZZ](https://mouzz.dev/).
 La [matrice fonctionnelle](docs/mouzz-scope.md) et les
 [observations de référence](docs/mouzz-observations.md) distinguent les éléments
 observés, les choix de Jerry et les points inconnus. L’original n’a pas été
 exécuté sur macOS pendant ce travail ; la parité exhaustive n’est pas certifiée.
 
-L’[icône originale](assets/branding/README.md) est fournie en SVG, PNG et ICO et
-intégrée à l’exécutable. Montserrat et Oswald sont livrées avec leurs licences
+La [mascotte néon](assets/branding/README.md), inspirée de Jerry de Tom et Jerry,
+est fournie en PNG et ICO et intégrée à l’exécutable. Son dessin remplit la zone
+de notification, avec une image choisie à la taille native de Windows. Montserrat et Oswald sont livrées avec leurs licences
 [OFL](src/Jerry.App/Assets/Fonts/) et leur provenance. Les dépendances principales
 sont WPF/.NET, NAudio et Whisper.net ; FFmpeg est acquis séparément.
 

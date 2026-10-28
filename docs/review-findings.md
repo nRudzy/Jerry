@@ -47,3 +47,14 @@ the custom-caption close lifecycle passed. The final full encoded fixture run
 reached 93 checks then failed its included-color witness because the Windows
 session was locked. The report does not claim that run passed; see
 windows-verification.md for the evidence and remaining limits.
+
+
+## Neon mascot / tray size — 28 October 2026
+
+The regression first reproduced a 32 px NotifyIcon against Windows’ 24 px
+small-icon metric, with a 22 px bright foreground. The dedicated tray image now
+matches 24 px and fills 24 × 20; the application retains its separate 32 px
+image. Both handles remain owned until the windows close. Native checks, the
+full minimal UI suite and close-without-tray passed. Independent read-only
+review reported no material findings. Mixed-scale taskbars and DPI changes
+during a run remain unverified.

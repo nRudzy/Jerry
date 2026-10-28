@@ -1,0 +1,27 @@
+{
+  "created": "2026-10-28",
+  "method": "Built-in ImageGen tool",
+  "purpose": "Personal Jerry / Tom and Jerry tribute, neon cyberpunk mascot",
+  "transparentBackground": true,
+  "prompt": "prompt.txt",
+  "source": "jerry-source.png",
+  "sourceSha256": "947abf73e4d0ca74469223a9fb534c8ac49e0fedce61296b8108940966b85bd0",
+  "exports": {
+    "png": "jerry.png",
+    "ico": "jerry.ico",
+    "sizes": [
+      16,
+      20,
+      24,
+      32,
+      40,
+      48,
+      64,
+      96,
+      128,
+      256
+    ]
+  },
+  "processing": "Transparent padding trimmed; aspect ratio preserved; Lanczos downsampling; RGBA PNG frames packed into ICO.",
+  "exporter": "../../scripts/export-icons.py"
+}

@@ -33,6 +33,10 @@ internal static partial class Program
             controller.Settings.Recording.OutputDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jerry", "qa", Guid.NewGuid().ToString("N"));
             controller.Settings.CountdownForMode(mode);
             controller.SettingsChanged();
+            if (mode == "tray-icon")
+            {
+                await TrayIconAsync(controller, main); controller.Quit(); return;
+            }
             if (mode == "minimal-menu")
             {
                 await QuickMenuChecksAsync(controller); controller.Quit(); return;

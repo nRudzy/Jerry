@@ -3,7 +3,7 @@
 ## Intention du projet
 
 Créer pour Gabriel une application Windows couvrant les fonctions actuelles de
-MOUZZ. Usage personnel, dépôt GitHub privé. Les nouvelles fonctions
+MOUZZ. Usage personnel, dépôt GitHub public. Les nouvelles fonctions
 viendront après la couverture du périmètre existant. La cible originale est
 une application macOS, pas iOS. L'utilisateur dispose uniquement de Windows.
 
@@ -31,9 +31,11 @@ des fichiers analysés, ainsi que les identifiants des preuves REA.
 Les applications originales dans `targets/`, les preuves brutes dans
 `evidence/raw/`, les dépendances et les réglages propres à la machine sont
 exclus de Git. Les sources, les synthèses et les ressources originales de Jerry
-sont destinées au dépôt privé `https://github.com/nRudzy/Jerry`, branche `main`.
-Conserver cette visibilité privée ; ne pas publier les réglages de machine,
-les applications de référence ou les preuves brutes.
+sont destinées au dépôt `https://github.com/nRudzy/Jerry`, branche `main`.
+Le 28 octobre 2026, l’utilisateur a confirmé vouloir le conserver public ; ce
+choix remplace la préférence privée initiale. Ne pas modifier sa visibilité
+sans nouvelle consigne. Ne pas publier les réglages de machine, les applications
+de référence ou les preuves brutes.
 
 ## Validation
 

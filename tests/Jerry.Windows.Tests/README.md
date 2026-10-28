@@ -14,6 +14,7 @@ dotnet run --project tests/Jerry.Windows.Tests/Jerry.Windows.Tests.csproj -- <do
 | --- | --- |
 | `components` (par défaut) | Quinze pages réelles, rendus d’effets distincts, clic forcé, affinité HUD, vidéo incluant annotation et excluant contrôle |
 | `minimal-menu` | Sous-ensemble rapide du menu réel, avec images de son état compact initial et de ses outils supplémentaires dépliés |
+| `tray-icon` | Icône réellement fournie au NotifyIcon : taille native Windows, premier plan visible sur au moins 80 % des deux dimensions, image indépendante de la fenêtre ; enregistre le PNG natif et ses mesures |
 | `minimal-ui` | Quinze pages à taille normale et 780×560, absence de débordement horizontal, menu rapide vivant, sélection/couleurs/largeur de la barre compacte et HUD exclu des captures |
 | `render-regressions` | Clic forcé malgré le réglage désactivé ; restauration du focus sur le même premier plan, pixels réels du rendu de notre fenêtre |
 | `close-no-tray` | Fermer la fenêtre avec `MinimizeToTray=false` quitte l’application et ses services |
