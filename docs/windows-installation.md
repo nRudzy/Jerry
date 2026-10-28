@@ -57,6 +57,30 @@ Le premier essai CI avait révélé une attente du serveur Roslyn après la fin 
 vérifie son code de sortie ; la construction complète prend 98 secondes sur le
 run réussi. Aucun serveur de compilation n'est tué par le script.
 
+## Livraison publiée et installation locale
+
+La [version 0.2.0](https://github.com/nRudzy/Jerry/releases/tag/v0.2.0) est publiée
+avec installateur, ZIP autonome et `SHA256SUMS.txt`. Le
+[run du tag](https://github.com/nRudzy/Jerry/actions/runs/40687366572) a de nouveau
+réussi les 60 tests Core, 14 tests Windows, 14 contrôles natifs et 132 contrôles
+d'installation avant publication. Le
+[run main](https://github.com/nRudzy/Jerry/actions/runs/40687366426) est également réussi.
+
+Les téléchargements publiés ont été comparés à leurs sommes SHA-256 et aux
+empreintes des fichiers GitHub. Sur le poste utilisateur, l'installation native
+a ensuite été effectuée en l'absence d'instance Jerry active, sans arrêter de
+session. Les 539 fichiers du manifeste installé correspondent à la release.
+Le menu Démarrer, Applications installées, la version 0.2.0 et le chemin local du
+démarrage automatique ont été contrôlés. Les empreintes des données existantes
+et les autres préférences sont inchangées ; le choix de démarrage Windows
+préexistant a été conservé et synchronisé.
+
+Jerry a été lancé depuis `%LOCALAPPDATA%\Programs\Jerry`, répond normalement et
+n'a créé aucun journal d'erreur. Aucune étape locale n'est différée. Aucun essai
+de désinstallation n'a été exécuté sur le poste utilisateur ; ces essais restent
+réservés aux runners jetables. Les réglages et preuves locales restent exclus
+de Git.
+
 ## Limites
 
 Les exécutables ne sont pas signés Authenticode. Aucun certificat, aucune

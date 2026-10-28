@@ -54,6 +54,6 @@
 **Files:** README.md, docs/windows-delivery.md and installation verification report.
 
 - [x] Run complete Core/Windows unit suite and installer CI; independently review the branch and fix material findings.
-- [ ] Document only actual verification, signature limitation and any deferred local installation.
-- [ ] Integrate into main, publish version tag and verified release artifacts, verify remote hashes and clean only the merged working branch.
-- [ ] Check local session state; install only if no Jerry instance is active. Otherwise leave installer ready and report the deferred local step.
+- [x] Document only actual verification, signature limitation and any deferred local installation.
+- [x] Integrate into main, publish version tag and verified release artifacts, verify remote hashes and clean only the merged working branch.
+- [x] Check local session state; install only if no Jerry instance is active. Otherwise leave installer ready and report the deferred local step.
