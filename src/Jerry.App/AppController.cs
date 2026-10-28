@@ -14,6 +14,7 @@ using Jerry.App.UI;
 using Jerry.Core.Input;
 using Jerry.Core.Recording;
 using Jerry.Core.Settings;
+using Jerry.Windows;
 using Forms = System.Windows.Forms;
 
 namespace Jerry.App;
@@ -56,6 +57,7 @@ public sealed class AppController : IDisposable
     private Point spotlightOrigin;
     private string shortcutSignature = "";
     private bool startupValue;
+    private readonly bool manageWindowsStartup;
     private int busyCount;
     private nint foreground;
     private Rect? foregroundBounds;
@@ -71,11 +73,25 @@ public sealed class AppController : IDisposable
     public event Action? StateChanged;
     public event Action<string>? StatusChanged;
 
-    public AppController(string dataDirectory, bool background)
+    public AppController(string dataDirectory, bool background, bool manageWindowsStartup = true)
     {
         Directory.CreateDirectory(dataDirectory);
         store = new SettingsStore(Path.Combine(dataDirectory, "settings.json"));
         Settings = store.Load();
+        this.manageWindowsStartup = manageWindowsStartup;
+        if (manageWindowsStartup)
+        {
+            Settings.LaunchAtLogin = StartupService.IsEnabled();
+            if (Settings.LaunchAtLogin)
+            {
+                try { StartupService.SetEnabled(true); }
+                catch (Exception error)
+                {
+                    StartupService.SetEnabled(false); Settings.LaunchAtLogin = false;
+                    Status = "Démarrage Windows : " + error.Message;
+                }
+            }
+        }
         Settings.Camera.Enabled = false;
         Settings.Captions.LiveEnabled = false;
         activation = new(Settings);
@@ -170,7 +186,7 @@ public sealed class AppController : IDisposable
             var errors = hotkeys.Apply(Settings.Hotkeys);
             if (errors.Count > 0) SetStatus(string.Join("  ", errors));
         }
-        if (startupValue != Settings.LaunchAtLogin)
+        if (manageWindowsStartup && startupValue != Settings.LaunchAtLogin)
         {
             try { StartupService.SetEnabled(Settings.LaunchAtLogin); startupValue = Settings.LaunchAtLogin; }
             catch (Exception ex) { Settings.LaunchAtLogin = startupValue; SetStatus("Démarrage Windows : " + ex.Message); }
@@ -398,6 +414,7 @@ public sealed class AppController : IDisposable
 
     public async Task ToggleRecordingAsync()
     {
+        if (IsShuttingDown) return;
         if (recordCancellation != null && !recording.IsRecording) { recordCancellation.Cancel(); return; }
         if (!await recordTransition.WaitAsync(0)) return;
         busyCount++; StateChanged?.Invoke();
@@ -439,6 +456,8 @@ public sealed class AppController : IDisposable
     }
     public async Task SetCameraEnabledAsync(bool enabled)
     {
+        if (IsShuttingDown) return;
+        busyCount++; StateChanged?.Invoke();
         try
         {
             if (enabled)
@@ -453,10 +472,11 @@ public sealed class AppController : IDisposable
             else { await webcam.StopAsync(); Settings.Camera.Enabled = false; cameraWindow?.Hide(); }
         }
         catch (Exception ex) { Settings.Camera.Enabled = false; SetStatus("Webcam : " + ex.Message); }
-        SettingsChanged();
+        finally { busyCount--; SettingsChanged(); }
     }
     public async Task SetLiveCaptionsAsync(bool enabled)
     {
+        if (IsShuttingDown) return;
         busyCount++; StateChanged?.Invoke();
         try
         {
@@ -470,6 +490,7 @@ public sealed class AppController : IDisposable
     public Task EnsureCaptionModelAsync() => RunOperationAsync(() => captions.EnsureModelAsync(new Progress<double>(p => SetStatus($"Modèle local : {p:P0}"))));
     private async Task RunOperationAsync(Func<Task> action)
     {
+        if (IsShuttingDown) return;
         busyCount++; StateChanged?.Invoke();
         try { await action(); SetStatus("Préparation locale terminée."); }
         catch (Exception ex) { SetStatus(ex.Message); }
@@ -523,6 +544,14 @@ public sealed class AppController : IDisposable
         var parts = new List<string>();
         if (input.Control) parts.Add("Ctrl"); if (input.Alt) parts.Add("Alt"); if (input.Windows) parts.Add("Win"); if (input.Shift && (modifiersOnly || text.Length != 1)) parts.Add("Shift");
         parts.Add(text); return string.Join(" + ", parts);
+    }
+    public bool TryQuitForMaintenance()
+    {
+        dispatcher.VerifyAccess();
+        if (IsRecording || IsRecordingTransition || IsBusy || DrawingMode ||
+            Settings.Camera.Enabled || Settings.Captions.LiveEnabled ||
+            Application.Current.Windows.OfType<CaptionEditorWindow>().Any()) return false;
+        Quit(); return true;
     }
     public async void Quit()
     {

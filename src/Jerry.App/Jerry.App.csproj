@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Jerry.Core/Jerry.Core.csproj" />
+    <ProjectReference Include="../Jerry.Windows/Jerry.Windows.csproj" />
     <PackageReference Include="NAudio" Version="2.2.1" />
     <PackageReference Include="Whisper.net" Version="1.9.0" />
     <PackageReference Include="Whisper.net.Runtime" Version="1.9.0" />

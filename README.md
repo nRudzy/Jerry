@@ -39,13 +39,32 @@ interface anthracite compacte et un menu près de l’horloge Windows.
 
 ## Démarrer
 
-### Utiliser une version déjà construite
+### Installer Jerry
 
-Ouvrez `dist/windows-x64/Jerry.exe` et conservez **tout le dossier** à côté de
-l’exécutable. Le runtime .NET est inclus dans la publication autonome.
+Téléchargez **[Jerry-Setup-0.2.0.exe](https://github.com/nRudzy/Jerry/releases/download/v0.2.0/Jerry-Setup-0.2.0.exe)**
+depuis les [versions GitHub](https://github.com/nRudzy/Jerry/releases/latest), puis
+ouvrez-le. L'assistant français installe Jerry pour votre compte, sans droits
+administrateur, dans `%LOCALAPPDATA%\Programs\Jerry`.
 
-Les exécutables ne sont pas versionnés dans ce dépôt. Pour les produire à partir
-des sources, suivez les étapes ci-dessous.
+Jerry apparaît dans le **menu Démarrer** et dans **Applications installées** de
+Windows. Le raccourci Bureau et le démarrage avec Windows sont facultatifs.
+Le runtime .NET et les dépendances natives nécessaires sont inclus.
+
+Les mises à jour conservent vos réglages, captures, modèles et outils téléchargés.
+Une capture, un décompte ou un éditeur ouvert bloque le remplacement : terminez
+votre travail puis relancez l'installation. Une ancienne copie portable peut
+nécessiter **Quitter Jerry** depuis son icône près de l'horloge.
+
+L'installateur et l'application ne sont **pas signés numériquement** : Windows
+peut afficher « éditeur inconnu » ou un avertissement SmartScreen. Aucune
+modification de politique de sécurité, de PowerShell ou de certificat n'est requise.
+
+### Version portable
+
+L'archive **[Jerry-Windows-x64-0.2.0.zip](https://github.com/nRudzy/Jerry/releases/download/v0.2.0/Jerry-Windows-x64-0.2.0.zip)**
+reste disponible. Décompressez **tout son contenu** dans un dossier Windows local,
+puis ouvrez `Jerry.exe`. Les DLL, ressources et notices doivent rester avec lui.
+`SHA256SUMS.txt` accompagne les deux téléchargements.
 
 ### Construire depuis les sources
 
@@ -55,13 +74,24 @@ SDK est indiquée dans [`global.json`](global.json).
 ```powershell
 git clone https://github.com/nRudzy/Jerry.git
 cd Jerry
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows.ps1
+./scripts/build-windows.ps1
 .\dist\windows-x64\Jerry.exe
 ```
 
 Le script lance les tests Core puis construit l’application autonome dans
 `dist/windows-x64/`. Les raccourcis `npm test`, `npm run build:windows` et
 `npm start` sont aussi disponibles avec Node.js, depuis Windows ou WSL.
+
+Pour produire l'installateur, il faut aussi Inno Setup et les fichiers
+redistribuables VC++ x64 officiels de Visual Studio :
+
+```powershell
+./scripts/build-installer.ps1 -Version 0.2.0
+```
+
+La CI Windows construit et teste les livraisons sur un runner jetable. Ces scripts
+de développement n'interviennent pas dans l'installation de la version téléchargée.
+Voir le [guide de livraison](docs/windows-delivery.md).
 
 ## Au quotidien
 
@@ -102,6 +132,10 @@ premier usage télécharge les outils vidéo et le modèle vocal depuis leurs
 sources de distribution. Les modèles restent ensuite disponibles hors ligne.
 La caméra et les sous-titres en direct sont désactivés au lancement.
 
+**Désinstaller** depuis les paramètres Windows supprime l'application, ses
+raccourcis et son démarrage automatique. Vos données personnelles restent à leur
+emplacement ; annuler la confirmation de désinstallation ne change rien.
+
 Les intermédiaires récupérables d’une capture restent dans `.Jerry-sessions`,
 dans le dossier choisi. Après avoir vérifié le MP4 final, vous pouvez les
 supprimer pour libérer de l’espace.
@@ -112,7 +146,11 @@ supprimer pour libérer de l’espace.
 assets/branding/         Mascotte néon : source PNG et ICO Windows
 src/Jerry.App/           Application WPF, interface et intégration Windows
 src/Jerry.Core/          Réglages, entrées, géométrie et logique de sous-titres
+src/Jerry.Windows/       Démarrage Windows et communication entre instances
+src/Jerry.Maintenance/   Auxiliaire autonome de l'installateur
+installer/              Assistant et désinstallateur Inno Setup
 tests/Jerry.Core.Tests/  Tests unitaires
+tests/Jerry.Windows.UnitTests/ Tests unitaires Windows
 tests/Jerry.Windows.Tests/ Vérifications natives et rendus WPF
 scripts/                Construction et lancement
 docs/                   Guides, périmètre et rapports de vérification
@@ -132,6 +170,10 @@ réglages temporaire. Leur protocole est décrit dans le
 Windows réussis. Le dernier contrôle de composition vidéo doit être repris sur
 une session déverrouillée. Les scénarios multi-écrans, DPI mixtes et entrées
 physiques restent à compléter ; voir le [rapport de validation](docs/windows-verification.md).
+
+L'installation a son [protocole et rapport](docs/windows-installation.md), distincts
+des comparaisons fonctionnelles avec MOUZZ. Les tests qui installent et
+désinstallent refusent de s'exécuter sur le poste utilisateur.
 
 ## Références
 

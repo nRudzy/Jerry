@@ -1,7 +1,9 @@
 ﻿param(
     [switch]$SkipTests,
     [switch]$TestOnly,
-    [switch]$FrameworkDependent
+    [switch]$FrameworkDependent,
+    [string]$OutputDirectory = '',
+    [ValidatePattern('^\d+\.\d+\.\d+$')][string]$Version = '0.2.0'
 )
 $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding($false)
@@ -19,8 +21,8 @@ try {
         Invoke-JerryDotnet @('test', (Join-Path $projectRoot 'tests\Jerry.Core.Tests\Jerry.Core.Tests.csproj'), '-c', 'Release', '--nologo', '--verbosity', 'minimal')
     }
     if ($TestOnly) { exit 0 }
-    $destination = Join-Path $projectRoot 'dist\windows-x64'
+    $destination = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $projectRoot 'dist\windows-x64' }
     $selfContained = if ($FrameworkDependent) { 'false' } else { 'true' }
-    Invoke-JerryDotnet @('publish', (Join-Path $projectRoot 'src\Jerry.App\Jerry.App.csproj'), '-c', 'Release', '-r', 'win-x64', '--self-contained', $selfContained, '-p:PublishSingleFile=false', '-o', $destination, '--nologo', '--verbosity', 'minimal')
+    Invoke-JerryDotnet @('publish', (Join-Path $projectRoot 'src\Jerry.App\Jerry.App.csproj'), '-c', 'Release', '-r', 'win-x64', '--self-contained', $selfContained, '-p:PublishSingleFile=false', "-p:Version=$Version", '-o', $destination, '--nologo', '--verbosity', 'minimal')
     Write-Host ('Application prête : ' + (Join-Path $destination 'Jerry.exe'))
 } finally { Pop-Location }

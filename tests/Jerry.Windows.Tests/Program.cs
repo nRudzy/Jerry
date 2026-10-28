@@ -63,7 +63,7 @@ internal static partial class Program
         try
         {
             Console.WriteLine("TEMP_SETTINGS=" + temporary);
-            controller = new AppController(temporary, background: false);
+            controller = new AppController(temporary, background: false, manageWindowsStartup: false);
             Check(controller != null, "AppController constructed and native hooks installed without throwing");
             controller.StatusChanged += status => Console.WriteLine("STATUS=" + status);
             var main = app.Windows.OfType<MainWindow>().Single();

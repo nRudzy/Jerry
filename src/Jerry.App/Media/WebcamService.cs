@@ -132,7 +132,7 @@ public sealed class WebcamService
             using var converted = SoftwareBitmap.Convert(bitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
             var stride = checked(converted.PixelWidth * 4);
             var pixels = new byte[checked(stride * converted.PixelHeight)];
-            var buffer = new Windows.Storage.Streams.Buffer((uint)pixels.Length);
+            var buffer = new global::Windows.Storage.Streams.Buffer((uint)pixels.Length);
             converted.CopyToBuffer(buffer);
             using var data = DataReader.FromBuffer(buffer);
             data.ReadBytes(pixels);

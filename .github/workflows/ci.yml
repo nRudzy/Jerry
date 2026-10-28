@@ -1,0 +1,115 @@
+name: Windows build and installer
+
+on:
+  push:
+    branches: [main, 'codex/**']
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  component-tests:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Core and Windows unit tests
+        shell: pwsh
+        run: |
+          dotnet test tests/Jerry.Core.Tests/Jerry.Core.Tests.csproj -c Release --nologo --logger 'trx;LogFileName=core.trx' --results-directory TestResults
+          if ($LASTEXITCODE -ne 0) { throw 'Core tests failed.' }
+          dotnet test tests/Jerry.Windows.UnitTests/Jerry.Windows.UnitTests.csproj -c Release --nologo --logger 'trx;LogFileName=windows.trx' --results-directory TestResults
+          if ($LASTEXITCODE -ne 0) { throw 'Windows unit tests failed.' }
+      - name: Native maintenance refusal and graceful shutdown
+        shell: pwsh
+        run: |
+          dotnet publish tests/Jerry.Windows.Tests/Jerry.Windows.Tests.csproj -c Release -r win-x64 --self-contained true -o dist/component-tests --nologo
+          if ($LASTEXITCODE -ne 0) { throw 'Component harness publish failed.' }
+          $report = Join-Path $env:GITHUB_WORKSPACE 'TestResults/maintenance'
+          $process = Start-Process -FilePath 'dist/component-tests/Jerry.Windows.Tests.exe' -ArgumentList ('"' + $report + '" maintenance') -Wait -PassThru
+          Get-Content (Join-Path $report 'run.log') -Tail 100
+          if ($process.ExitCode -ne 0) { throw 'Native maintenance component tests failed.' }
+      - name: Component test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-component-test-reports
+          path: TestResults/**
+          if-no-files-found: warn
+
+  installer:
+    # A separate, clean runner is intentional: component tests download tools
+    # into Jerry's data directory; lifecycle tests must reject such a profile.
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Inno Setup compiler
+        shell: pwsh
+        run: choco install innosetup --yes --no-progress --limit-output
+      - name: Build complete Windows distribution
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path dist -Force | Out-Null
+          ./scripts/build-installer.ps1 -SkipTests *>&1 | Tee-Object dist/build-installer.log
+      - name: Disposable install, update and uninstall lifecycle
+        shell: pwsh
+        run: |
+          ./scripts/test-installer.ps1 -InstallerPath dist/Jerry-Setup-0.2.0.exe -PublishedAppPath dist/windows-x64 -OutputDirectory dist/installer-test
+      - name: Installer test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer-test-reports
+          path: |
+            dist/build-installer.log
+            dist/installer-test/**
+          if-no-files-found: warn
+      - name: Verified release assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-release-assets
+          path: |
+            dist/Jerry-Setup-0.2.0.exe
+            dist/Jerry-Windows-x64-0.2.0.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [component-tests, installer]
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-release-assets
+          path: dist
+      - name: Publish verified Windows release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ($env:GITHUB_REF_NAME -cne 'v0.2.0') { throw 'The tag must match the source version 0.2.0.' }
+          foreach ($line in Get-Content dist/SHA256SUMS.txt) {
+            if ($line -notmatch '^([0-9a-f]{64})  (Jerry-(?:Setup-0\.2\.0\.exe|Windows-x64-0\.2\.0\.zip))$') { throw 'Unexpected release checksum entry.' }
+            $actual = (Get-FileHash (Join-Path dist $Matches[2]) -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($actual -cne $Matches[1]) { throw 'Downloaded artifact checksum mismatch.' }
+          }
+          gh release create $env:GITHUB_REF_NAME --verify-tag --title 'Jerry 0.2.0' --generate-notes dist/Jerry-Setup-0.2.0.exe dist/Jerry-Windows-x64-0.2.0.zip dist/SHA256SUMS.txt
+          if ($LASTEXITCODE -ne 0) { throw 'GitHub release publication failed.' }

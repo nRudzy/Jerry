@@ -24,7 +24,7 @@ internal static partial class Program
                 await NativeServicesAsync(); app.Shutdown(); return;
             }
             var directory = Path.Combine(Path.GetTempPath(), "Jerry-Regression-" + Guid.NewGuid().ToString("N"));
-            controller = new AppController(directory, background: false);
+            controller = new AppController(directory, background: false, manageWindowsStartup: false);
             controller.StatusChanged += text => Console.WriteLine("STATUS=" + text);
             var main = app.Windows.OfType<MainWindow>().Single();
             controller.Settings.Captions.AutoOpenAfterRecording = false;
@@ -33,6 +33,10 @@ internal static partial class Program
             controller.Settings.Recording.OutputDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Jerry", "qa", Guid.NewGuid().ToString("N"));
             controller.Settings.CountdownForMode(mode);
             controller.SettingsChanged();
+            if (mode == "maintenance")
+            {
+                await MaintenanceAsync(controller, main); return;
+            }
             if (mode == "tray-icon")
             {
                 await TrayIconAsync(controller, main); controller.Quit(); return;

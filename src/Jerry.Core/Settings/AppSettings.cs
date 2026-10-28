@@ -1,3 +1,6 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace Jerry.Core.Settings;
 
 public enum SpotlightShape { Circle, HorizontalBar, VerticalBar }
@@ -13,6 +16,8 @@ public enum CameraBorderStyle { None, White, Gradient }
 
 public sealed class AppSettings
 {
+    [JsonExtensionData]
+    public Dictionary<string, JsonElement>? AdditionalSettings { get; set; }
     public int Version { get; set; } = 1;
     public bool Enabled { get; set; } = true;
     public bool LaunchAtLogin { get; set; }

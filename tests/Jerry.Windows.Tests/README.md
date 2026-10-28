@@ -21,6 +21,7 @@ dotnet run --project tests/Jerry.Windows.Tests/Jerry.Windows.Tests.csproj -- <do
 | `quit-countdown` | Quitter pendant le décompte attend la transition annulée |
 | `quit-start` | Quitter pendant le démarrage du moteur attend sa transition et vérifie les PID enfants enregistrés |
 | `session-countdown` | Appel direct à `PrepareForSessionEnd` pendant le décompte, sans fermer la session Windows |
+| `maintenance` | Refus de maintenance pendant décompte et capture réels, conservation du processus, arrêt explicite, protection caméra/live/éditeur, sortie inactive |
 | `session-recording` | Même appel pendant une vraie capture courte ; MP4 finalisé, interface et processus libérés |
 | `native-services` | Réservation/conflit/libération de Ctrl+Alt+F24 sans touche envoyée ; zoom 1,05 et restauration exacte ; états natifs du curseur ; position/échelle de la loupe |
 | `idle` | Processus neuf avec contrôleur, anneau statique, aucun modèle chargé ; 1 s de chauffe puis CPU/mémoire sur 5 s |

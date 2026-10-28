@@ -15,7 +15,7 @@ if (process.platform !== 'win32') {
   if (converted.status !== 0) throw new Error(converted.stderr || 'Chemin Windows introuvable.');
   scriptPath = converted.stdout.trim();
 }
-const args = ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', scriptPath];
+const args = ['-NoProfile', '-File', scriptPath];
 if (command === 'test') args.push('-TestOnly');
 args.push(...process.argv.slice(3));
 const child = spawn('powershell.exe', args, { stdio: 'inherit', cwd: root });

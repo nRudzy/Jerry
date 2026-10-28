@@ -3,7 +3,8 @@
 ## Utiliser et construire Jerry
 
 - [Guide principal](../README.md) : démarrage, outils et emplacements des fichiers.
-- [Livraison Windows](windows-delivery.md) : version portable et copies locales.
+- [Livraison Windows](windows-delivery.md) : installation, mise à jour et version portable.
+- [Installation Windows](windows-installation.md) : tests du cycle d'installation et limites.
 - [Validation Windows](windows-verification.md) : essais réalisés et limites.
 - [Tests natifs](../tests/Jerry.Windows.Tests/README.md) : modes et preuves attendues.
 - [Icône](../assets/branding/README.md) : fichiers sources et formats Windows.
